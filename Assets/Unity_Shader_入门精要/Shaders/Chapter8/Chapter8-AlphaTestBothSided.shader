@@ -5,8 +5,9 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Test With Both Side" {
 	Properties {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
-		_Cutoff ("Alpha Cutoff", Range(0, 1)) = 0.5
+		_Cutoff ("Alpha Cutoff", Range(0, 1)) = 0.5 //阙值
 	}
+
 	SubShader {
 		Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 		
@@ -53,12 +54,13 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Test With Both Side" {
 				
 				return o;
 			}
-			
+
+			// 在片元着色器做透明度测试
 			fixed4 frag(v2f i) : SV_Target {
 				fixed3 worldNormal = normalize(i.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				
-				fixed4 texColor = tex2D(_MainTex, i.uv);
+				fixed4 texColor = tex2D(_MainTex, i.uv);// 这里的贴图xyz分量是颜色，w分量是透明度的值
 
 				clip (texColor.a - _Cutoff);
 				

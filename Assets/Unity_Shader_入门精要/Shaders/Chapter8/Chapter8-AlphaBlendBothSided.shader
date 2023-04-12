@@ -14,6 +14,8 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blend With Both Side" {
 			Tags { "LightMode"="ForwardBase" }
 			
 			// First pass renders only back faces 
+			// 保证背面总是在正面被渲染之前渲染,这样就不会背面的物体不显示了
+			// 为什么先渲染背面？渲染时会比较它的深度值与当前深度缓冲中的深度值，如果它的深度值距离摄像机更远，那么就不会再进行混合操作。这保证了当我们先渲染了一个出现在透明物体前面的不透明物体，它仍然可以正常地遮挡住透明物体。因此，如果先渲染正面，背面的深度比较深，就会出现渲染但不混合的现象。
 			Cull Front
 			
 			ZWrite Off

@@ -5,7 +5,7 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blend" {
 	Properties {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
-		_AlphaScale ("Alpha Scale", Range(0, 1)) = 1
+		_AlphaScale ("Alpha Scale", Range(0, 1)) = 1 
 	}
 	SubShader {
 		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
@@ -13,8 +13,8 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blend" {
 		Pass {
 			Tags { "LightMode"="ForwardBase" }
 
-			ZWrite Off
-			Blend SrcAlpha OneMinusSrcAlpha
+			ZWrite Off 
+			Blend SrcAlpha OneMinusSrcAlpha 
 			
 			CGPROGRAM
 			
@@ -58,7 +58,7 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blend" {
 				fixed3 worldNormal = normalize(i.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				
-				fixed4 texColor = tex2D(_MainTex, i.uv);
+				fixed4 texColor = tex2D(_MainTex, i.uv); 
 				
 				fixed3 albedo = texColor.rgb * _Color.rgb;
 				
@@ -66,7 +66,7 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blend" {
 				
 				fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(worldNormal, worldLightDir));
 				
-				return fixed4(ambient + diffuse, texColor.a * _AlphaScale);
+				return fixed4(ambient + diffuse, texColor.a * _AlphaScale); 
 			}
 			
 			ENDCG

@@ -5,22 +5,22 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blending With ZWrite" {
 	Properties {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
-		_AlphaScale ("Alpha Scale", Range(0, 1)) = 1
+		_AlphaScale ("Alpha Scale", Range(0, 1)) = 1 // 控制整体透明度,调一下试试
 	}
 	SubShader {
 		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 		
 		// Extra pass that renders to depth buffer only
 		Pass {
-			ZWrite On
-			ColorMask 0
+			ZWrite On // 开启深度写入
+			ColorMask 0 // 不输出颜色，目的仅仅是为了把该模型的深度值写入深度缓冲中
 		}
 		
 		Pass {
 			Tags { "LightMode"="ForwardBase" }
 			
-			ZWrite Off
-			Blend SrcAlpha OneMinusSrcAlpha
+			ZWrite Off // 关闭深度写入
+			Blend SrcAlpha OneMinusSrcAlpha // 开启混合，设置混合因子
 			
 			CGPROGRAM
 			
@@ -64,7 +64,7 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blending With ZWrite" {
 				fixed3 worldNormal = normalize(i.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				
-				fixed4 texColor = tex2D(_MainTex, i.uv);
+				fixed4 texColor = tex2D(_MainTex, i.uv); // 采样纹理，xyz分量是颜色，w分量是透明度的值
 				
 				fixed3 albedo = texColor.rgb * _Color.rgb;
 				
@@ -72,7 +72,8 @@ Shader "Unity Shaders Book/Chapter 8/Alpha Blending With ZWrite" {
 				
 				fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(worldNormal, worldLightDir));
 				
-				return fixed4(ambient + diffuse, texColor.a * _AlphaScale);
+				return fixed4(ambient + diffuse, texColor.a * _AlphaScale); // w分量作为片元的透明通道，输出片元的透明度
+				// 输出之后，混合因子SrcAlpha = w分量上的值，混合的工作unity会自己来
 			}
 			
 			ENDCG
