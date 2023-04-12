@@ -11,7 +11,7 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 	SubShader {		
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert
@@ -25,6 +25,9 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 			fixed4 _Specular;
 			float _Gloss;
 			
+			// a2v和v2f中的TEXCOORD0，代表的意思不同
+			// a2v：TEXCOORD0代表获取到的模型的第一套纹理坐标，可以从里面取值来用
+			// v2f：TEXCOORD0类似于一种类型声明，声明我这个变量要存储到第一个寄存器，是一个输出值，你要给这个变量赋值，而不是从里面取值
 			struct a2v {
 				float4 vertex : POSITION;
 				float3 normal : NORMAL;
@@ -46,9 +49,10 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 				
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
 				
+				// 对纹理应用偏移和缩放
 				o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 				// Or just call the built-in function
-//				o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+				//				o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 				
 				return o;
 			}
@@ -58,7 +62,8 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				
 				// Use the texture to sample the diffuse color
-				fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
+				// albedo是反照率，可以理解为反射颜色与入射颜色(众所周知，光是有颜色的)的比值，因此反射颜色=光的颜色*albedo
+				fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb; 
 				
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
 				
@@ -67,6 +72,7 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(i.worldPos));
 				fixed3 halfDir = normalize(worldLightDir + viewDir);
 				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
+				// albedo只控制漫反射的颜色，高光反射的颜色用_Specular控制，这两者在代码中等效
 				
 				return fixed4(ambient + diffuse + specular, 1.0);
 			}

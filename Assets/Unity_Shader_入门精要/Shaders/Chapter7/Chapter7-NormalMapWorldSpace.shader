@@ -13,7 +13,7 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In World Space" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert
@@ -76,7 +76,7 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In World Space" {
 				// Get the normal in tangent space
 				fixed3 bump = UnpackNormal(tex2D(_BumpMap, i.uv.zw));
 				bump.xy *= _BumpScale;
-				bump.z = sqrt(1.0 - saturate(dot(bump.xy, bump.xy)));
+				bump.z = sqrt(1.0 - saturate(dot(bump.xy, bump.xy))); // 解压的bump因为进行了缩放，xy变化了，因此要重新算z轴分量
 				// Transform the narmal from tangent space to world space
 				bump = normalize(half3(dot(i.TtoW0.xyz, bump), dot(i.TtoW1.xyz, bump), dot(i.TtoW2.xyz, bump)));
 				

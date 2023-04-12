@@ -11,7 +11,7 @@ Shader "Unity Shaders Book/Chapter 6/Blinn-Phong" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert

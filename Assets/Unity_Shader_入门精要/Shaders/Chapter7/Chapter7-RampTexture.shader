@@ -11,7 +11,7 @@ Shader "Unity Shaders Book/Chapter 7/Ramp Texture" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert

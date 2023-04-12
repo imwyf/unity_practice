@@ -12,7 +12,7 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In Tangent Space" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert
@@ -51,25 +51,25 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In Tangent Space" {
 				#define minor(a,b,c) determinant(float3x3(input.a, input.b, input.c))
 				
 				float4x4 cofactors = float4x4(
-				     minor(_22_23_24, _32_33_34, _42_43_44), 
-				    -minor(_21_23_24, _31_33_34, _41_43_44),
-				     minor(_21_22_24, _31_32_34, _41_42_44),
-				    -minor(_21_22_23, _31_32_33, _41_42_43),
-				    
-				    -minor(_12_13_14, _32_33_34, _42_43_44),
-				     minor(_11_13_14, _31_33_34, _41_43_44),
-				    -minor(_11_12_14, _31_32_34, _41_42_44),
-				     minor(_11_12_13, _31_32_33, _41_42_43),
-				    
-				     minor(_12_13_14, _22_23_24, _42_43_44),
-				    -minor(_11_13_14, _21_23_24, _41_43_44),
-				     minor(_11_12_14, _21_22_24, _41_42_44),
-				    -minor(_11_12_13, _21_22_23, _41_42_43),
-				    
-				    -minor(_12_13_14, _22_23_24, _32_33_34),
-				     minor(_11_13_14, _21_23_24, _31_33_34),
-				    -minor(_11_12_14, _21_22_24, _31_32_34),
-				     minor(_11_12_13, _21_22_23, _31_32_33)
+				minor(_22_23_24, _32_33_34, _42_43_44), 
+				-minor(_21_23_24, _31_33_34, _41_43_44),
+				minor(_21_22_24, _31_32_34, _41_42_44),
+				-minor(_21_22_23, _31_32_33, _41_42_43),
+				
+				-minor(_12_13_14, _32_33_34, _42_43_44),
+				minor(_11_13_14, _31_33_34, _41_43_44),
+				-minor(_11_12_14, _31_32_34, _41_42_44),
+				minor(_11_12_13, _31_32_33, _41_42_43),
+				
+				minor(_12_13_14, _22_23_24, _42_43_44),
+				-minor(_11_13_14, _21_23_24, _41_43_44),
+				minor(_11_12_14, _21_22_24, _41_42_44),
+				-minor(_11_12_13, _21_22_23, _41_42_43),
+				
+				-minor(_12_13_14, _22_23_24, _32_33_34),
+				minor(_11_13_14, _21_23_24, _31_33_34),
+				-minor(_11_12_14, _21_22_24, _31_32_34),
+				minor(_11_12_13, _21_22_23, _31_32_33)
 				);
 				#undef minor
 				return transpose(cofactors) / determinant(input);
@@ -93,9 +93,9 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In Tangent Space" {
 
 				/*
 				float4x4 tangentToWorld = float4x4(worldTangent.x, worldBinormal.x, worldNormal.x, 0.0,
-												   worldTangent.y, worldBinormal.y, worldNormal.y, 0.0,
-												   worldTangent.z, worldBinormal.z, worldNormal.z, 0.0,
-												   0.0, 0.0, 0.0, 1.0);
+				worldTangent.y, worldBinormal.y, worldNormal.y, 0.0,
+				worldTangent.z, worldBinormal.z, worldNormal.z, 0.0,
+				0.0, 0.0, 0.0, 1.0);
 				// The matrix that transforms from world space to tangent space is inverse of tangentToWorld
 				float3x3 worldToTangent = inverse(tangentToWorld);
 				*/
@@ -112,16 +112,16 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In Tangent Space" {
 				/// 
 
 				// Compute the binormal
-//				float3 binormal = cross( normalize(v.normal), normalize(v.tangent.xyz) ) * v.tangent.w;
-//				// Construct a matrix which transform vectors from object space to tangent space
-//				float3x3 rotation = float3x3(v.tangent.xyz, binormal, v.normal);
+				//				float3 binormal = cross( normalize(v.normal), normalize(v.tangent.xyz) ) * v.tangent.w;
+				//				// Construct a matrix which transform vectors from object space to tangent space
+				//				float3x3 rotation = float3x3(v.tangent.xyz, binormal, v.normal);
 				// Or just use the built-in macro
-//				TANGENT_SPACE_ROTATION;
-//				
-//				// Transform the light direction from object space to tangent space
-//				o.lightDir = mul(rotation, normalize(ObjSpaceLightDir(v.vertex))).xyz;
-//				// Transform the view direction from object space to tangent space
-//				o.viewDir = mul(rotation, normalize(ObjSpaceViewDir(v.vertex))).xyz;
+				//				TANGENT_SPACE_ROTATION;
+				//				
+				//				// Transform the light direction from object space to tangent space
+				//				o.lightDir = mul(rotation, normalize(ObjSpaceLightDir(v.vertex))).xyz;
+				//				// Transform the view direction from object space to tangent space
+				//				o.viewDir = mul(rotation, normalize(ObjSpaceViewDir(v.vertex))).xyz;
 				
 				return o;
 			}
@@ -134,8 +134,8 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In Tangent Space" {
 				fixed4 packedNormal = tex2D(_BumpMap, i.uv.zw);
 				fixed3 tangentNormal;
 				// If the texture is not marked as "Normal map"
-//				tangentNormal.xy = (packedNormal.xy * 2 - 1) * _BumpScale;
-//				tangentNormal.z = sqrt(1.0 - saturate(dot(tangentNormal.xy, tangentNormal.xy)));
+				//				tangentNormal.xy = (packedNormal.xy * 2 - 1) * _BumpScale;
+				//				tangentNormal.z = sqrt(1.0 - saturate(dot(tangentNormal.xy, tangentNormal.xy)));
 				
 				// Or mark the texture as "Normal map", and use the built-in funciton
 				tangentNormal = UnpackNormal(packedNormal);

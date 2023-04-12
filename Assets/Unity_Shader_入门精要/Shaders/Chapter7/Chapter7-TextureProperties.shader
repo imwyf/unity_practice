@@ -7,7 +7,7 @@ Shader "Unity Shaders Book/Chapter 7/Texture Properties" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert
@@ -29,13 +29,13 @@ Shader "Unity Shaders Book/Chapter 7/Texture Properties" {
 			};
 			
 			v2f vert(a2v v) {
-			 	v2f o;
-			 	// Transform the vertex from object space to projection space
-			 	o.position = UnityObjectToClipPos(v.vertex);
+				v2f o;
+				// Transform the vertex from object space to projection space
+				o.position = UnityObjectToClipPos(v.vertex);
 
-			 	o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-			 	
-			 	return o;
+				o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+				
+				return o;
 			}
 			
 			fixed4 frag(v2f i) : SV_Target {

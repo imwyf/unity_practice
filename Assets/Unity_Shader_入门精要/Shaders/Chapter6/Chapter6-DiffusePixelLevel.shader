@@ -39,6 +39,7 @@ Shader "Unity Shaders Book/Chapter 6/Diffuse Pixel-Level" {
 				return o;
 			}
 			
+			// 逐片元着色，从顶点着色器传入法线
 			fixed4 frag(v2f i) : SV_Target {
 				// Get ambient term
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;

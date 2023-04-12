@@ -3,12 +3,12 @@
 
 Shader "Unity Shaders Book/Chapter 6/Diffuse Vertex-Level" {
 	Properties {
-		_Diffuse ("Diffuse", Color) = (1, 1, 1, 1)
+		_Diffuse ("Diffuse", Color) = (1, 1, 1, 1) // 控制物体表面颜色，调一调就懂了
 	}
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert
@@ -41,6 +41,7 @@ Shader "Unity Shaders Book/Chapter 6/Diffuse Vertex-Level" {
 				// Get the light direction in world space
 				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);
 				// Compute diffuse term
+				// _Diffuse就是后面会提到的反照率，albedo。物体表现出来的颜色是反射的光的颜色，因此反照率代表反射哪些光，因此改变反照率就等同于改变物体颜色
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLight));
 				
 				o.color = ambient + diffuse;

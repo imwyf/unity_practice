@@ -10,7 +10,7 @@ Shader "Unity Shaders Book/Chapter 6/Blinn-Phong Use Built-in Functions" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert

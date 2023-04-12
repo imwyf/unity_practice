@@ -4,9 +4,9 @@
 
 Shader "Unity Shaders Book/Chapter 6/Specular Vertex-Level" {
 	Properties {
-		_Diffuse ("Diffuse", Color) = (1, 1, 1, 1)
-		_Specular ("Specular", Color) = (1, 1, 1, 1)
-		_Gloss ("Gloss", Range(8.0, 256)) = 20
+		_Diffuse ("Diffuse", Color) = (1, 1, 1, 1) // 控制物体表面颜色
+		_Specular ("Specular", Color) = (1, 1, 1, 1) // 控制高光反射的颜色，效果类似于_Diffuse，调一调就懂了
+		_Gloss ("Gloss", Range(8.0, 256)) = 20 // 控制高光中光斑的大小
 	}
 	SubShader {
 		Pass { 
@@ -58,7 +58,7 @@ Shader "Unity Shaders Book/Chapter 6/Specular Vertex-Level" {
 				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(saturate(dot(reflectDir, viewDir)), _Gloss);
 				
 				o.color = ambient + diffuse + specular;
-							 	
+				
 				return o;
 			}
 			

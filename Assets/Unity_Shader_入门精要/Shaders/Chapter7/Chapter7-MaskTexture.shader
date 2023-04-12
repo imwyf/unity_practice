@@ -14,7 +14,7 @@ Shader "Unity Shaders Book/Chapter 7/Mask Texture" {
 	SubShader {
 		Pass { 
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			#pragma vertex vert
@@ -24,7 +24,7 @@ Shader "Unity Shaders Book/Chapter 7/Mask Texture" {
 			
 			fixed4 _Color;
 			sampler2D _MainTex;
-			float4 _MainTex_ST;
+			float4 _MainTex_ST; // 修改主纹理的平铺系数和偏移系数会同时影响 3 个纹理的采样
 			sampler2D _BumpMap;
 			float _BumpScale;
 			sampler2D _SpecularMask;
@@ -41,7 +41,7 @@ Shader "Unity Shaders Book/Chapter 7/Mask Texture" {
 			
 			struct v2f {
 				float4 pos : SV_POSITION;
-				float2 uv : TEXCOORD0;
+				float2 uv : TEXCOORD0; // 所有纹理共用一个UV坐标
 				float3 lightDir: TEXCOORD1;
 				float3 viewDir : TEXCOORD2;
 			};
@@ -60,7 +60,7 @@ Shader "Unity Shaders Book/Chapter 7/Mask Texture" {
 			}
 			
 			fixed4 frag(v2f i) : SV_Target {
-			 	fixed3 tangentLightDir = normalize(i.lightDir);
+				fixed3 tangentLightDir = normalize(i.lightDir);
 				fixed3 tangentViewDir = normalize(i.viewDir);
 
 				fixed3 tangentNormal = UnpackNormal(tex2D(_BumpMap, i.uv));
@@ -73,12 +73,13 @@ Shader "Unity Shaders Book/Chapter 7/Mask Texture" {
 				
 				fixed3 diffuse = _LightColor0.rgb * albedo * max(0, dot(tangentNormal, tangentLightDir));
 				
-			 	fixed3 halfDir = normalize(tangentLightDir + tangentViewDir);
-			 	// Get the mask value
-			 	fixed specularMask = tex2D(_SpecularMask, i.uv).r * _SpecularScale;
-			 	// Compute specular term with the specular mask
-			 	fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(tangentNormal, halfDir)), _Gloss) * specularMask;
-			
+				fixed3 halfDir = normalize(tangentLightDir + tangentViewDir);
+				// Get the mask value
+				// _SpecularScale调整模型整体高光的强度，_SpecularMask通过纹理来精细的调整
+				fixed specularMask = tex2D(_SpecularMask, i.uv).r * _SpecularScale;
+				// Compute specular term with the specular mask
+				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(tangentNormal, halfDir)), _Gloss) * specularMask;
+				
 				return fixed4(ambient + diffuse + specular, 1.0);
 			}
 			
