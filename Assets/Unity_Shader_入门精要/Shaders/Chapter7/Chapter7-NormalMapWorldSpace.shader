@@ -6,7 +6,7 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In World Space" {
 		_Color ("Color Tint", Color) = (1, 1, 1, 1)
 		_MainTex ("Main Tex", 2D) = "white" {}
 		_BumpMap ("Normal Map", 2D) = "bump" {}
-		_BumpScale ("Bump Scale", Float) = 1.0
+		_BumpScale ("Bump Scale", Float) = 1.0 // 控制修改的法线的方向和改变幅度
 		_Specular ("Specular", Color) = (1, 1, 1, 1)
 		_Gloss ("Gloss", Range(8.0, 256)) = 20
 	}
@@ -80,6 +80,7 @@ Shader "Unity Shaders Book/Chapter 7/Normal Map In World Space" {
 				// Transform the narmal from tangent space to world space
 				bump = normalize(half3(dot(i.TtoW0.xyz, bump), dot(i.TtoW1.xyz, bump), dot(i.TtoW2.xyz, bump)));
 				
+				// 用修改后的法线计算光照
 				fixed3 albedo = tex2D(_MainTex, i.uv).rgb * _Color.rgb;
 				
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz * albedo;
