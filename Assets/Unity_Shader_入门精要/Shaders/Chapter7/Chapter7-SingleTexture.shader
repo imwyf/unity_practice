@@ -58,6 +58,7 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 			}
 			
 			fixed4 frag(v2f i) : SV_Target {
+				// 因此在片元着色器中i.worldNormal是已经被Unity自动插值的片元上的法向量，不是顶点的法向量
 				fixed3 worldNormal = normalize(i.worldNormal);
 				fixed3 worldLightDir = normalize(UnityWorldSpaceLightDir(i.worldPos));
 				
