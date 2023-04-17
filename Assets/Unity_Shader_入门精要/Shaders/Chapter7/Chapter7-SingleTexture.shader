@@ -27,7 +27,7 @@ Shader "Unity Shaders Book/Chapter 7/Single Texture" {
 			
 			// a2v和v2f中的TEXCOORD0，代表的意思不同
 			// a2v：TEXCOORD0代表获取到的模型的第一套纹理坐标，可以从里面取值来用
-			// v2f：TEXCOORD0类似于一种类型声明，声明我这个变量要存储到第一个寄存器，是一个输出值，你要给这个变量赋值，而不是从里面取值
+			// v2f：TEXCOORD0声明这个变量要存储到第0个插值寄存器，这些数值会被插值后传递给fragment shader
 			struct a2v {
 				float4 vertex : POSITION;
 				float3 normal : NORMAL;
