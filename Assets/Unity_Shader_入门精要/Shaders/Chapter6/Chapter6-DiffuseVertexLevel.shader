@@ -42,6 +42,8 @@ Shader "Unity Shaders Book/Chapter 6/Diffuse Vertex-Level" {
 				fixed3 worldLight = normalize(_WorldSpaceLightPos0.xyz);
 				// Compute diffuse term
 				// _Diffuse就是后面会提到的反照率，albedo。物体表现出来的颜色是反射的光的颜色，因此反照率代表反射哪些光，因此改变反照率就等同于改变物体颜色
+				// _LightColor0是光强和光源颜色的乘积，光源颜色x反照率=反射颜色
+				// 后面计算的那些与光强和法线有关的值是一个系数，这个系数乘上反射颜色使得某些点的颜色暗淡/明亮一点，这样就可以体现出“光泽”
 				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * saturate(dot(worldNormal, worldLight));
 				
 				o.color = ambient + diffuse;
