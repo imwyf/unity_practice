@@ -14,7 +14,7 @@ Shader "Unity Shaders Book/Chapter 9/Shadow" {
 		Pass {
 			// Pass for ambient light & first pixel light (directional light)
 			Tags { "LightMode"="ForwardBase" }
-		
+			
 			CGPROGRAM
 			
 			// Apparently need to add this declaration 
@@ -44,17 +44,17 @@ Shader "Unity Shaders Book/Chapter 9/Shadow" {
 			};
 			
 			v2f vert(a2v v) {
-			 	v2f o;
-			 	o.pos = UnityObjectToClipPos(v.vertex);
-			 	
-			 	o.worldNormal = UnityObjectToWorldNormal(v.normal);
+				v2f o;
+				o.pos = UnityObjectToClipPos(v.vertex);
+				
+				o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
-			 	o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-			 	
-			 	// Pass shadow coordinates to pixel shader
-			 	TRANSFER_SHADOW(o);
-			 	
-			 	return o;
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				
+				// Pass shadow coordinates to pixel shader
+				TRANSFER_SHADOW(o);
+				
+				return o;
 			}
 			
 			fixed4 frag(v2f i) : SV_Target {
@@ -63,34 +63,34 @@ Shader "Unity Shaders Book/Chapter 9/Shadow" {
 				
 				fixed3 ambient = UNITY_LIGHTMODEL_AMBIENT.xyz;
 
-			 	fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * max(0, dot(worldNormal, worldLightDir));
+				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * max(0, dot(worldNormal, worldLightDir));
 
-			 	fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
-			 	fixed3 halfDir = normalize(worldLightDir + viewDir);
-			 	fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
+				fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+				fixed3 halfDir = normalize(worldLightDir + viewDir);
+				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
 
 				fixed atten = 1.0;
 				
 				fixed shadow = SHADOW_ATTENUATION(i);
 				
-				return fixed4(ambient + (diffuse + specular) * atten * shadow, 1.0);
+				return fixed4(ambient + (diffuse + specular) * atten * shadow, 1.0); 
 			}
 			
 			ENDCG
 		}
-	
+		
 		Pass {
 			// Pass for other pixel lights
 			Tags { "LightMode"="ForwardAdd" }
 			
 			Blend One One
-		
+			
 			CGPROGRAM
 			
 			// Apparently need to add this declaration
 			#pragma multi_compile_fwdadd
 			// Use the line below to add shadows for point and spot lights
-//			#pragma multi_compile_fwdadd_fullshadows
+			//			#pragma multi_compile_fwdadd_fullshadows
 			
 			#pragma vertex vert
 			#pragma fragment frag
@@ -114,14 +114,14 @@ Shader "Unity Shaders Book/Chapter 9/Shadow" {
 			};
 			
 			v2f vert(a2v v) {
-			 	v2f o;
-			 	o.position = UnityObjectToClipPos(v.vertex);
-			 	
-			 	o.worldNormal = UnityObjectToWorldNormal(v.normal);
-			 	
-			 	o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-			 	
-			 	return o;
+				v2f o;
+				o.position = UnityObjectToClipPos(v.vertex);
+				
+				o.worldNormal = UnityObjectToWorldNormal(v.normal);
+				
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+				
+				return o;
 			}
 			
 			fixed4 frag(v2f i) : SV_Target {
@@ -132,11 +132,11 @@ Shader "Unity Shaders Book/Chapter 9/Shadow" {
 					fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz - i.worldPos.xyz);
 				#endif
 
-			 	fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * max(0, dot(worldNormal, worldLightDir));
+				fixed3 diffuse = _LightColor0.rgb * _Diffuse.rgb * max(0, dot(worldNormal, worldLightDir));
 
-			 	fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
-			 	fixed3 halfDir = normalize(worldLightDir + viewDir);
-			 	fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
+				fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - i.worldPos.xyz);
+				fixed3 halfDir = normalize(worldLightDir + viewDir);
+				fixed3 specular = _LightColor0.rgb * _Specular.rgb * pow(max(0, dot(worldNormal, halfDir)), _Gloss);
 
 				#ifdef USING_DIRECTIONAL_LIGHT
 					fixed atten = 1.0;
@@ -144,7 +144,7 @@ Shader "Unity Shaders Book/Chapter 9/Shadow" {
 					float3 lightCoord = mul(unity_WorldToLight, float4(i.worldPos, 1)).xyz;
 					fixed atten = tex2D(_LightTexture0, dot(lightCoord, lightCoord).rr).UNITY_ATTEN_CHANNEL;
 				#endif
-			 	
+				
 				return fixed4((diffuse + specular) * atten, 1.0);
 			}
 			
